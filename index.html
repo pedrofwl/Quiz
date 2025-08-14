@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avaliação de JavaScript - Pedro Henrique</title>
+<style>
+    /* ====== ESTILO DA AVALIAÇÃO ====== */
+    body {
+        font-family: Arial, sans-serif;
+        background: #f0f4f8;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background: #0077b6;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .container {
+        max-width: 700px;
+        margin: 20px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #023e8a;
+    }
+    .pergunta {
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+    .alternativas {
+        margin-bottom: 20px;
+    }
+    .alternativas label {
+        display: block;
+        background: #e0f7fa;
+        padding: 8px;
+        border-radius: 5px;
+        margin-top: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .alternativas label:hover {
+        background: #b2ebf2;
+    }
+    button {
+        background: #0096c7;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        display: block;
+        margin: auto;
+    }
+    button:hover {
+        background: #0077b6;
+    }
+    #resultado {
+        text-align: center;
+        font-weight: bold;
+        margin-top: 20px;
+        font-size: 18px;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    Nome: Pedro Henrique | Nº Chamada: 27
+</header>
+
+<div class="container">
+    <h1>Avaliação de JavaScript</h1>
+    <div id="avaliacao"></div>
+    <button onclick="enviarAvaliacao()">Enviar</button>
+    <div id="resultado"></div>
+</div>
+
+<script>
+/* ====== LISTA DE PERGUNTAS ====== */
+/* Cada pergunta é um objeto com: enunciado e alternativas (também objetos com texto e correta:true/false) */
+const perguntas = [
+    {
+        enunciado: "1) O que significa DOM no JavaScript?",
+        alternativas: [
+            { texto: "Documento Organizado de Marcação", correta: false },
+            { texto: "Document Object Model", correta: true },
+            { texto: "Dados Organizados de Memória", correta: false },
+            { texto: "Design Orientado a Módulos", correta: false }
+        ]
+    },
+    {
+        enunciado: "2) Qual comando exibe mensagens no console do navegador?",
+        alternativas: [
+            { texto: "print()", correta: false },
+            { texto: "console.log()", correta: true },
+            { texto: "alert()", correta: false },
+            { texto: "write()", correta: false }
+        ]
+    },
+    {
+        enunciado: "3) Qual destes NÃO é um tipo de dado primitivo no JavaScript?",
+        alternativas: [
+            { texto: "String", correta: false },
+            { texto: "Boolean", correta: false },
+            { texto: "Number", correta: false },
+            { texto: "Array", correta: true }
+        ]
+    },
+    {
+        enunciado: "4) Como se declara uma variável no JavaScript moderno?",
+        alternativas: [
+            { texto: "var x = 10;", correta: false },
+            { texto: "let x = 10;", correta: true },
+            { texto: "dim x = 10;", correta: false },
+            { texto: "constante x = 10;", correta: false }
+        ]
+    },
+    {
+        enunciado: "5) Qual operador é usado para comparação estrita (valor e tipo)?",
+        alternativas: [
+            { texto: "==", correta: false },
+            { texto: "===", correta: true },
+            { texto: "!=", correta: false },
+            { texto: "!==", correta: false }
+        ]
+    }
+];
+
+/* ====== FUNÇÃO PARA MOSTRAR AS PERGUNTAS ====== */
+function mostraPerguntas() {
+    const area = document.getElementById("avaliacao");
+    perguntas.forEach((pergunta, indice) => {
+        // Cria o elemento da pergunta
+        const divPergunta = document.createElement("div");
+        divPergunta.classList.add("pergunta");
+        divPergunta.textContent = pergunta.enunciado;
+        area.appendChild(divPergunta);
+
+        // Chama a função para mostrar as alternativas
+        mostraAlternativas(pergunta.alternativas, indice);
+    });
+}
+
+/* ====== FUNÇÃO PARA MOSTRAR ALTERNATIVAS ====== */
+function mostraAlternativas(alternativas, indicePergunta) {
+    const area = document.getElementById("avaliacao");
+    const divAlternativas = document.createElement("div");
+    divAlternativas.classList.add("alternativas");
+
+    alternativas.forEach((alt, indiceAlt) => {
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = "pergunta" + indicePergunta; // agrupa por pergunta
+        input.value = alt.correta;
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(" " + alt.texto));
+        divAlternativas.appendChild(label);
+    });
+
+    area.appendChild(divAlternativas);
+}
+
+/* ====== FUNÇÃO PARA ENVIAR A AVALIAÇÃO ====== */
+function enviarAvaliacao() {
+    let pontos = 0;
+    perguntas.forEach((pergunta, indice) => {
+        const selecionada = document.querySelector(`input[name="pergunta${indice}"]:checked`);
+        if (selecionada && selecionada.value === "true") {
+            pontos++;
+        }
+    });
+
+    const resultado = document.getElementById("resultado");
+    resultado.textContent = `Você acertou ${pontos} de ${perguntas.length} perguntas!`;
+
+    // Mensagem especial se acertar todas
+    if (pontos === perguntas.length) {
+        resultado.textContent += " 🎉 Parabéns, você mandou muito bem!";
+    }
+}
+
+/* ====== CHAMADA INICIAL ====== */
+mostraPerguntas();
+</script>
+
+</body>
+</html>
