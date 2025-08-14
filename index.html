@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avaliação - Pedro Henrique Schiebel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    Nome: Pedro Henrique Schiebel | Nº 27
+</header>
+
+<div class="container">
+    <h1>Prova de Conhecimentos Gerais</h1>
+    <div id="avaliacao"></div>
+    <button onclick="enviarAvaliacao()">Enviar Respostas</button>
+    <div id="resultado"></div>
+</div>
+
+<script>
+/* ====== LISTA DE PERGUNTAS ====== */
+const perguntas = [
+    {
+        enunciado: "1) História: Quem foi o primeiro presidente do Brasil?",
+        alternativas: [
+            { texto: "Getúlio Vargas", correta: false },
+            { texto: "Marechal Deodoro da Fonseca", correta: true },
+            { texto: "Dom Pedro II", correta: false },
+            { texto: "Juscelino Kubitschek", correta: false }
+        ]
+    },
+    {
+        enunciado: "2) Matemática: Quanto é 12 × 8?",
+        alternativas: [
+            { texto: "96", correta: true },
+            { texto: "86", correta: false },
+            { texto: "106", correta: false },
+            { texto: "76", correta: false }
+        ]
+    },
+    {
+        enunciado: "3) Ciências: Qual planeta é conhecido como 'Planeta Vermelho'?",
+        alternativas: [
+            { texto: "Vênus", correta: false },
+            { texto: "Marte", correta: true },
+            { texto: "Júpiter", correta: false },
+            { texto: "Saturno", correta: false }
+        ]
+    },
+    {
+        enunciado: "4) Geografia: Qual é a capital do estado do Paraná?",
+        alternativas: [
+            { texto: "Londrina", correta: false },
+            { texto: "Curitiba", correta: true },
+            { texto: "Maringá", correta: false },
+            { texto: "Ponta Grossa", correta: false }
+        ]
+    },
+    {
+        enunciado: "5) Português: Qual a forma correta da palavra?",
+        alternativas: [
+            { texto: "Excessão", correta: false },
+            { texto: "Exceção", correta: true },
+            { texto: "Execessão", correta: false },
+            { texto: "Execeção", correta: false }
+        ]
+    }
+];
+
+/* ====== FUNÇÃO PARA MOSTRAR AS PERGUNTAS ====== */
+function mostraPerguntas() {
+    const area = document.getElementById("avaliacao");
+    perguntas.forEach((pergunta, indice) => {
+        const divPergunta = document.createElement("div");
+        divPergunta.classList.add("pergunta");
+        divPergunta.textContent = pergunta.enunciado;
+        area.appendChild(divPergunta);
+
+        mostraAlternativas(pergunta.alternativas, indice);
+    });
+}
+
+/* ====== FUNÇÃO PARA MOSTRAR ALTERNATIVAS ====== */
+function mostraAlternativas(alternativas, indicePergunta) {
+    const area = document.getElementById("avaliacao");
+    const divAlternativas = document.createElement("div");
+    divAlternativas.classList.add("alternativas");
+
+    alternativas.forEach((alt) => {
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = "pergunta" + indicePergunta;
+        input.value = alt.correta;
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(" " + alt.texto));
+        divAlternativas.appendChild(label);
+    });
+
+    area.appendChild(divAlternativas);
+}
+
+/* ====== FUNÇÃO PARA ENVIAR A AVALIAÇÃO ====== */
+function enviarAvaliacao() {
+    let pontos = 0;
+    perguntas.forEach((pergunta, indice) => {
+        const selecionada = document.querySelector(`input[name="pergunta${indice}"]:checked`);
+        if (selecionada && selecionada.value === "true") {
+            pontos++;
+        }
+    });
+
+    const resultado = document.getElementById("resultado");
+    resultado.textContent = `Você acertou ${pontos} de ${perguntas.length} perguntas.`;
+
+    if (pontos === perguntas.length) {
+        resultado.textContent += " 🎉 Parabéns, gabaritou!";
+    } else if (pontos >= 3) {
+        resultado.textContent += " 👍 Bom trabalho!";
+    } else {
+        resultado.textContent += " 📚 Continue estudando!";
+    }
+}
+
+/* ====== CHAMADA INICIAL ====== */
+mostraPerguntas();
+</script>
+
+</body>
+</html>
